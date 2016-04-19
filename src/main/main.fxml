@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="295.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
+    <!--stylesheets>
+        <URL value="@/styles/main.css" />
+    </stylesheets -->
+       <children>
+      <Button fx:id="curlButton" layoutX="34.0" layoutY="26.0" mnemonicParsing="false" onAction="#importCurl" text="Cookies/Curl" />
+      <Button fx:id="listButton" layoutX="154.0" layoutY="26.0" mnemonicParsing="false" onAction="#importTicketList" text="List of tickets" />
+      <Button fx:id="exportButton" defaultButton="true" disable="true" layoutX="154.0" layoutY="296.0" mnemonicParsing="false" onAction="#export2CSV" prefHeight="25.0" prefWidth="84.0" text="Export CSV" />
+      <CheckBox fx:id="appCB" layoutX="21.0" layoutY="69.0" mnemonicParsing="false" selected="true" text="App" />
+      <CheckBox fx:id="languageCB" layoutX="21.0" layoutY="95.0" mnemonicParsing="false" text="Country/Language" />
+      <CheckBox fx:id="osCB" layoutX="21.0" layoutY="120.0" mnemonicParsing="false" selected="true" text="OS" />
+      <CheckBox fx:id="deviceCB" layoutX="21.0" layoutY="146.0" mnemonicParsing="false" selected="true" text="Device" />
+      <CheckBox fx:id="tagsCB" layoutX="21.0" layoutY="172.0" mnemonicParsing="false" selected="true" text="Tags" />
+      <CheckBox fx:id="networkCB" layoutX="21.0" layoutY="195.0" mnemonicParsing="false" text="Network" />
+      <CheckBox fx:id="storageCB" layoutX="21.0" layoutY="247.0" mnemonicParsing="false" text="Storage" visible="false" />
+      <CheckBox fx:id="advancedCB" layoutX="20.0" layoutY="221.0" mnemonicParsing="false" text="Advanced" />
+      <Button fx:id="getData" defaultButton="true" layoutX="50.0" layoutY="296.0" mnemonicParsing="false" onAction="#getData" text="Get data" />
+   </children>
+</Pane>

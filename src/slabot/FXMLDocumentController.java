@@ -115,7 +115,7 @@ public class FXMLDocumentController implements Initializable {
                 System.out.println("Will start tracking in " + firstRun + " minutes.");
                 labelProperty.set("Will start tracking in " + firstRun + " minutes.");
                 botName = nameField.getText();
-                timer.scheduleAtFixedRate(hourJob, firstRun * MIN, HOUR); // this code
+                timer.scheduleAtFixedRate(hourJob, firstRun * MIN, HOUR); // this code  0,2 *MIN);
             } else {
                 trackButton.setText("Start Tracking");
                 trackButton.setCancelButton(false);

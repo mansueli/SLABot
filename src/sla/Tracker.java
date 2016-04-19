@@ -88,7 +88,14 @@ public class Tracker {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         Integer day = cal.get(Calendar.DATE);
-        System.out.println("date>>" + day);
+        //System.out.println("date>>" + day);
+        return day;
+    }
+    public static int getDayPST(Date date) {
+        Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"));
+        cal.setTime(date);
+        Integer day = cal.get(Calendar.DATE);
+        //System.out.println("date>>" + day);
         return day;
     }
 
@@ -100,19 +107,23 @@ public class Tracker {
         return hour;
     }
 
-    private static int getRow(Date firstCell) {
-        int pst = getDay(getPSTTime());
+    public static int getRow(Date firstCell) {
+        int pst = getDayPST(getPSTTime());
         int cell = getDay(firstCell);
         boolean isFirst = (pst - cell) < 7;
+        System.out.println("PST-cell"+ pst + "<--->"+cell);
+        System.out.println("(pst - cell)=="+ (pst - cell));
+        System.out.println("hourPST = getHourPST()");
         if (isFirst) {
-            return getHourPST() + 1;
+            return getHourPST() +2;
+            
         } else {
             return getHourPST() + 28;
         }
     }
 
-    private static int getCell(Date firstCell) {
-        int pst = getDay(getPSTTime());
+    public static int getCell(Date firstCell) {
+        int pst = getDayPST(getPSTTime());
         int cell = getDay(firstCell);
         boolean isFirst = (pst - cell) < 7;
         if (isFirst) {
@@ -158,9 +169,11 @@ public class Tracker {
 
     private static String getSLATime() {
         String json = main.GetJSON.getRawSLA(curl);
-        
-        String result = main.Utils.find("changed-at", json);
         String empty = main.Utils.find("empty", json);
+        String result;
+        if(empty=="false")
+            result = main.Utils.find("changed-at", json);
+        else return "no issue";
         System.out.println("\nempty>>"+empty+"\nfound::" + result);
         return result;
     }

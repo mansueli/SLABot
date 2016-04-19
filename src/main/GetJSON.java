@@ -62,7 +62,11 @@ public class GetJSON {
         try {
             System.out.println(curlParams);
             Runtime rt = Runtime.getRuntime();
-            String cmdString = curl.substring(1);
+            String cmdString;
+            if(!(curl.charAt(0)=='c'))
+                cmdString = curl.substring(1);
+            else
+                cmdString = curl;
             System.out.println(cmdString);
             Process pr = rt.exec(cmdString);
 

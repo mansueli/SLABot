@@ -33,7 +33,7 @@ import static sla.Tracker.getHourPST;
  *
  * @author Rodrigo
  */
-public class FXMLDocumentController implements Initializable {
+public class SLAController implements Initializable {
 
     final static long SEC = 1000;
     final static long MIN = 60 * SEC;
@@ -62,7 +62,9 @@ public class FXMLDocumentController implements Initializable {
         public void run() {
             Platform.runLater(new Runnable() {
                 public void run() {
+                    
                     tracker.setBotName(botName);
+                    System.out.println("Set botName = " + botName);
                     System.out.println("Tracked " + getHourPST() + ":00\n");
                     labelProperty.set("Tracked " + getHourPST() + ":00\n");
                     tracker.trackSLA();
@@ -82,7 +84,7 @@ public class FXMLDocumentController implements Initializable {
             hasCURL = true;
             tracker.setCurl(curl);
         } catch (Exception ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SLAController.class.getName()).log(Level.SEVERE, null, ex);
             hasCURL = false;
         }
 
@@ -115,7 +117,7 @@ public class FXMLDocumentController implements Initializable {
                 System.out.println("Will start tracking in " + firstRun + " minutes.");
                 labelProperty.set("Will start tracking in " + firstRun + " minutes.");
                 botName = nameField.getText();
-                timer.scheduleAtFixedRate(hourJob, firstRun * MIN, HOUR); // this code  0,2 *MIN);
+                timer.scheduleAtFixedRate(hourJob, 0, HOUR); //firstRun * MIN, HOUR); // this code  0,2 *MIN);
             } else {
                 trackButton.setText("Start Tracking");
                 trackButton.setCancelButton(false);

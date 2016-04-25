@@ -27,6 +27,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
  * @author Rodrigo
  */
 public class Tracker {
+
     private static String curl;
 
     public String getCurl() {
@@ -42,10 +43,11 @@ public class Tracker {
     }
 
     public void setBotName(String botName) {
-        if(!botName.isEmpty()){
-          Tracker.botName = "SLAbot";
-        }else
-        Tracker.botName = botName;
+        if (botName.isEmpty()) {
+            Tracker.botName = "SLAbot";
+        } else {
+            Tracker.botName = botName;
+        }
     }
 
     public File getWorkbook() {
@@ -70,9 +72,6 @@ public class Tracker {
 //        timer.scheduleAtFixedRate(hourJob, firstRun * MIN, HOUR); // this code
 //
 //    }
-
-
-
     public static Date getPSTTime() {
         Calendar localTime = Calendar.getInstance();
         Calendar pstTime = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"));
@@ -91,6 +90,7 @@ public class Tracker {
         //System.out.println("date>>" + day);
         return day;
     }
+
     public static int getDayPST(Date date) {
         Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"));
         cal.setTime(date);
@@ -111,13 +111,15 @@ public class Tracker {
         int pst = getDayPST(getPSTTime());
         int cell = getDay(firstCell);
         boolean isFirst = (pst - cell) < 7;
-        System.out.println("PST-cell"+ pst + "<--->"+cell);
-        System.out.println("(pst - cell)=="+ (pst - cell));
+        System.out.println("PST-cell" + pst + "<--->" + cell);
+        System.out.println("(pst - cell)==" + (pst - cell));
         System.out.println("hourPST = getHourPST()");
         if (isFirst) {
-            return getHourPST() +2;
-            
+            System.out.println("Row: "  + (getHourPST() + 2));
+            return getHourPST() + 2;
+
         } else {
+            System.out.println("Row: "  + (getHourPST() + 28));
             return getHourPST() + 28;
         }
     }
@@ -127,9 +129,12 @@ public class Tracker {
         int cell = getDay(firstCell);
         boolean isFirst = (pst - cell) < 7;
         if (isFirst) {
+            System.out.println("here");
             return (pst - cell) * 2 + 1;
         } else {
-            return ((pst + 7) - cell) * 2 + 1;
+            System.out.println("vaca: " + ((pst - 7) - cell));
+            System.out.println("boi: " + ((pst - 7) - cell) * 2 + 1);
+            return ((pst - 7) - cell) * 2 + 1;
         }
     }
 
@@ -146,23 +151,25 @@ public class Tracker {
             Date firstCellContents = cell.getDateCellValue();
             rowIndex = getRow(firstCellContents);
             cellIndex = getCell(firstCellContents);
+            System.out.println("getCell ==" + cellIndex);
             //get the cell where it must write
             row = sheet.getRow(rowIndex);
             cell = row.getCell(cellIndex);
-            
+
             //get SLA time
             String sla = getSLATime();
-            cell.setCellValue(sla);
             System.out.println("\nSLA:" + sla);
-            cell = row.getCell(cellIndex+1);
-            cell.setCellValue(Tracker.botName);
+            cell.setCellValue(sla);
+
+            cell = row.getCell(cellIndex + 1);
+            cell.setCellValue(botName);
             try ( //write it on the file
                     FileOutputStream fileOut = new FileOutputStream(workbook)) {
                 wb.write(fileOut);
             }
             System.out.println("Saved on " + workbook.getAbsolutePath());
         } catch (IOException | InvalidFormatException | EncryptedDocumentException e) {
-             System.out.println("ERROR : " + e.getMessage());
+            System.out.println("ERROR : " + e.getMessage());
         }
 
     }
@@ -171,10 +178,12 @@ public class Tracker {
         String json = main.GetJSON.getRawSLA(curl);
         String empty = main.Utils.find("empty", json);
         String result;
-        if(empty=="false")
+        if (empty == "false") {
             result = main.Utils.find("changed-at", json);
-        else return "no issue";
-        System.out.println("\nempty>>"+empty+"\nfound::" + result);
+        } else {
+            return "no issue";
+        }
+        System.out.println("\nempty>>" + empty + "\nfound::" + result);
         return result;
     }
 }

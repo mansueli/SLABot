@@ -27,7 +27,7 @@
       <Label layoutX="10.0" layoutY="165.0" text="Track Name" />
       <ImageView fitHeight="77.0" fitWidth="109.0" layoutX="-5.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../boticon.png" />
+            <Image url="@boticon.png" />
          </image>
       </ImageView>
     </children>

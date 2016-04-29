@@ -7,7 +7,7 @@ If you don't know what a Shared HelpShift queue is, this is not for you.
 
 
 USAGE
-=============
+-----
 Update the input file example accordinly and export the cURL (cmd) from chrome. Run the file and import the cURL file (NOTE: in UTF-8) format. 
 
 And the input file as it is (Excel 1997-2003) .XLS. 
@@ -16,7 +16,7 @@ And the input file as it is (Excel 1997-2003) .XLS.
 * PS2: We track everything in PST time if you need to change that it should be easy peasy.   
 
 LICENSE
-=============
+-----
 
 This project is itself licensed with the very fun and Commercial friendly licence Apache 2.0 check the [licence file](https://github.com/mansueli/SLABot/blob/master/LICENSE) for more info. If you for any reason needs this to be licensed under something else please contact me. 
 

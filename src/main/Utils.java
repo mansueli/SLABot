@@ -32,38 +32,26 @@ public class Utils {
     private Utils() {
     }
 
+    /**
+     * Read a file from the system
+     * @param path the Path for the file
+     * @param encoding charset i.e UTF-8 or Klingon 
+     * @return string with file contents
+     * @throws IOException
+     */
     public static String readFile(String path, Charset encoding)
             throws IOException {
         byte[] encoded = Files.readAllBytes(Paths.get(path));
         return new String(encoded, encoding);
     }
 
-    public static List<Long> readCSV2Long(String path) throws IOException {
-        String raw = readFile(path, StandardCharsets.UTF_8);
-        String[] rawValues = raw.split(",");
-        List<Long> valueList = new ArrayList<>();
-        for (String v : rawValues) {
-            valueList.add(Long.parseLong(v));
-        }
-        return valueList;
-    }
 
-    public static List<String> readCSV(String path) throws IOException {
-        String raw = readFile(path, StandardCharsets.UTF_8);
-        return Arrays.asList(raw.split(","));
-    }
 
-    public static String getCookieFromFile(String path) throws IOException {
-        String moi = Utils.readFile(path, StandardCharsets.UTF_8);
-        String[] mois = moi.split("-H");
-        for (String m : mois) {
-            if (m.contains("Cookie")) {
-                return " -H" + m;
-            }
-        }
-        return "Error couldn't read cookie";
-    }
-
+    /**
+     * Save a file into the system
+     * @param content the content to be written 
+     * @param file the file, eh?! 
+     */
     public static void SaveFile(String content, File file) {
         try {
             FileWriter fileWriter = null;
@@ -77,6 +65,14 @@ public class Utils {
 
     }
 
+    /**
+     * Find all occurrences of a list of elements in a JSON String
+     * @param items
+     * @param json
+     * @return string with everything found (if something was found) 
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public static String findAll(List<String> items, String json) throws IOException, InterruptedException {
         StringBuilder sb = new StringBuilder();
         int i = items.size();
@@ -97,6 +93,12 @@ public class Utils {
         return sb.toString();
     }
 
+    /**
+     * Finds the value for a determined JSON key
+     * @param key where the value is stored
+     * @param jsonText the place where you have to find that thing
+     * @return
+     */
     public static String find(String key, String jsonText) {
         JSONParser parser = new JSONParser();
         KeyFinder finder = new KeyFinder();
@@ -124,40 +126,5 @@ public class Utils {
         }
         return finder.getValue().toString().replaceAll("[^A-Za-z0-9,_.]", "").replaceAll(",", ";");
     }
-
-    public static List<String> findArray(String key, String jsonText) throws ParseException {
-        List<String> list = new ArrayList<>();
-        JSONParser parser = new JSONParser();
-        KeyFinder finder = new KeyFinder();
-        finder.setMatchKey(key);
-        Object obj = parser.parse(jsonText);
-        JSONObject jsonObject = (JSONObject) obj;
-
-        JSONObject msg = (JSONObject) jsonObject.get("data");
-        System.out.println("bla");
-//        Iterator<String> iterator = msg.iterator();
-//        while (iterator.hasNext()) {
-//            String s = iterator.next();
-//            list.add(s);
-//            System.out.println(s);
-//        }
-        return list;
-    }
-
-    public static List<String> getTags(String jsonText) throws ParseException {
-        List<String> list = new ArrayList<>();
-        JSONParser parser = new JSONParser();
-
-        Object obj = parser.parse(jsonText);
-        JSONObject jsonObject = (JSONObject) obj;
-        JSONObject jsonTags = (JSONObject) ((JSONObject) ((JSONObject) jsonObject.get("data")).get("issue")).get("tags");
-        String tags = (String) jsonTags.get("items").toString().replaceAll("[^A-Za-z0-9,_.]","");
-        String[] vaca = tags.split(",");
-        for(String s : vaca) {
-            list.add(s);
-            System.out.println(s);
-        }
-            return list;
-        }
 
     }

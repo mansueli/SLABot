@@ -10,7 +10,7 @@ import org.json.simple.parser.ContentHandler;
 import org.json.simple.parser.ParseException;
 
 /**
- *
+ *  POJO class for matching up stuff in the JSON
  * @author Rodrigo
  */
 public class KeyFinder implements ContentHandler{
@@ -20,36 +20,55 @@ public class KeyFinder implements ContentHandler{
   private String key;
   private String matchKey;
         
-  public void setMatchKey(String matchKey){
+
+    public void setMatchKey(String matchKey){
     this.matchKey = matchKey;
   }
         
-  public Object getValue(){
+    public Object getValue(){
     return value;
   }
         
-  public boolean isEnd(){
+    public boolean isEnd(){
     return end;
   }
         
-  public void setFound(boolean found){
+    public void setFound(boolean found){
     this.found = found;
   }
         
-  public boolean isFound(){
+    public boolean isFound(){
     return found;
   }
         
-  public void startJSON() throws ParseException, IOException {
+    /**
+     * Start dealing with the JSON throws exception if there is IO error / format error.
+     * @throws ParseException
+     * @throws IOException
+     */
+    public void startJSON() throws ParseException, IOException {
     found = false;
     end = false;
   }
 
-  public void endJSON() throws ParseException, IOException {
+    /**
+     *
+     * @throws ParseException
+     * @throws IOException
+     */
+    public void endJSON() throws ParseException, IOException {
     end = true;
   }
 
-  public boolean primitive(Object value) throws ParseException, IOException {
+    /**
+     * The comparison method (check if the object has the secret key we want) 
+     * 
+     * @param value the comparison object
+     * @return whether the key was found
+     * @throws ParseException
+     * @throws IOException
+     */
+    public boolean primitive(Object value) throws ParseException, IOException {
     if(key != null){
       if(key.equals(matchKey)){
         found = true;
@@ -60,30 +79,32 @@ public class KeyFinder implements ContentHandler{
     }
     return true;
   }
-
-  public boolean startArray() throws ParseException, IOException {
+/***
+ * All the methods below are pretty straight forward POJO stuff.
+ */
+    
+    public boolean startArray() throws ParseException, IOException {
     return true;
   }
 
-        
-  public boolean startObject() throws ParseException, IOException {
+    public boolean startObject() throws ParseException, IOException {
     return true;
   }
 
-  public boolean startObjectEntry(String key) throws ParseException, IOException {
+    public boolean startObjectEntry(String key) throws ParseException, IOException {
     this.key = key;
     return true;
   }
         
-  public boolean endArray() throws ParseException, IOException {
+    public boolean endArray() throws ParseException, IOException {
     return false;
   }
 
-  public boolean endObject() throws ParseException, IOException {
+    public boolean endObject() throws ParseException, IOException {
     return true;
   }
 
-  public boolean endObjectEntry() throws ParseException, IOException {
+    public boolean endObjectEntry() throws ParseException, IOException {
     return true;
   }
 

@@ -55,7 +55,9 @@ public class SLAController implements Initializable {
     @FXML
     private TextField nameField;
     private static final StringProperty labelProperty = new SimpleStringProperty();
-
+/***
+ * Class to do it's job hour after hour without getting tired of its slave work
+ */
     static class OneHourJob extends TimerTask {
 
         @Override
@@ -73,6 +75,11 @@ public class SLAController implements Initializable {
         }
     }
 
+    
+    /***
+     *  Imports the file containing the cURL funny text file. 
+     * Technical note: file must be in UTF-8
+     */
     @FXML
     private void importCURL(ActionEvent event) {
 
@@ -89,7 +96,12 @@ public class SLAController implements Initializable {
         }
 
     }
-
+    /***
+     * Get the the Excel file 
+     * we currently only support only one .XLS (the input example) for this. 
+     * Therefore there is a filter to avoid over users being users
+     * @param event user action
+     */
     @FXML
     private void openFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -101,6 +113,10 @@ public class SLAController implements Initializable {
         hasSLAFile = true;
     }
 
+    /**
+     * Basically prepare the controller to call the main method each hour
+     * @param event 
+     */
     @FXML
     private void trackButton(ActionEvent event) {
         if (hasCURL && hasSLAFile) {
@@ -133,12 +149,15 @@ public class SLAController implements Initializable {
             alert.showAndWait();
         }
     }
-
+/***
+ * Just bind the detailLabel & the labelProperty
+ * @param url
+ * @param rb 
+ */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         tracker = new Tracker();
         detailLabel.textProperty().bind(labelProperty);
-
     }
 
 }

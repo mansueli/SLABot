@@ -30,11 +30,9 @@ public class Tracker {
 
     private static String curl;
 
-
     public String getCurl() {
         return curl;
     }
-
 
     public void setCurl(String curl) {
         Tracker.curl = curl;
@@ -45,7 +43,8 @@ public class Tracker {
     }
 
     /**
-     * Defines the name for the BOT (if empty = SLAbot) 
+     * Defines the name for the BOT (if empty = SLAbot)
+     *
      * @param botName
      */
     public void setBotName(String botName) {
@@ -56,13 +55,12 @@ public class Tracker {
         }
     }
 
-
     public File getWorkbook() {
         return workbook;
     }
 
     /**
-     * 
+     *
      * @param workbook Excel .XLS (old file format)
      */
     public void setWorkbook(File workbook) {
@@ -73,9 +71,10 @@ public class Tracker {
 
     /**
      * get current time in PST
-     * @return Java Date in the PST timezone 
+     *
+     * @return Java Date in the PST timezone
      */
-        public static Date getPSTTime() {
+    public static Date getPSTTime() {
         Calendar localTime = Calendar.getInstance();
         Calendar pstTime = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"));
 //        pstTime.setTimeInMillis(localTime.getTimeInMillis());
@@ -88,6 +87,7 @@ public class Tracker {
 
     /**
      * Date where you want to find the day in the month
+     *
      * @param date
      * @return current day from the given time
      */
@@ -100,7 +100,42 @@ public class Tracker {
     }
 
     /**
-     * 
+     * Calculate the days between dates properly
+     *
+     * @param day1 calendar with the first day
+     * @param day2 calendar with the second day
+     * @return the difference between them from
+     */
+    public static int daysBetweenFirstPST(Calendar day1) {
+        Calendar dayTwo = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"));
+        Calendar dayOne = (Calendar) day1.clone();
+//                dayTwo = (Calendar) day2.clone();
+
+        if (dayOne.get(Calendar.YEAR) == dayTwo.get(Calendar.YEAR)) {
+            return Math.abs(dayOne.get(Calendar.DAY_OF_YEAR) - dayTwo.get(Calendar.DAY_OF_YEAR));
+        } else {
+            if (dayTwo.get(Calendar.YEAR) > dayOne.get(Calendar.YEAR)) {
+                //swap them
+                Calendar temp = dayOne;
+                dayOne = dayTwo;
+                dayTwo = temp;
+            }
+            int extraDays = 0;
+
+            int dayOneOriginalYearDays = dayOne.get(Calendar.DAY_OF_YEAR);
+
+            while (dayOne.get(Calendar.YEAR) > dayTwo.get(Calendar.YEAR)) {
+                dayOne.add(Calendar.YEAR, -1);
+                // getActualMaximum() important for leap years
+                extraDays += dayOne.getActualMaximum(Calendar.DAY_OF_YEAR);
+            }
+
+            return extraDays - dayTwo.get(Calendar.DAY_OF_YEAR) + dayOneOriginalYearDays;
+        }
+    }
+
+    /**
+     *
      * @param date current time / another day
      * @return equivalent day in PST
      */
@@ -124,17 +159,18 @@ public class Tracker {
     }
 
     /**
-     * get the row to write contents based on the first cell 
-     * if you are following the right input it would be X3:X26 or X29:X52 
-     * @param firstCell 
+     * get the row to write contents based on the first cell if you are
+     * following the right input it would be X3:X26 or X29:X52
+     *
+     * @param firstCell
      */
-    public static int getRow(Date firstCell) {
+    public static int getRow(Calendar first) {
+        int diff = daysBetweenFirstPST(first);
         int pst = getDayPST(getPSTTime());
-        int cell = getDay(firstCell);
-        boolean isFirst = (pst - cell) < 7;
-        System.out.println("PST-cell" + pst + "<--->" + cell);
-        System.out.println("(pst - cell)==" + (pst - cell));
-        System.out.println("hourPST = getHourPST()");
+        int cell = first.get(Calendar.DAY_OF_MONTH);
+        System.out.println("row=diff>>"+diff);
+        boolean isFirst = (diff) < 7;
+        System.out.println("diff=" + diff);
         if (isFirst) {
             System.out.println("Row: "  + (getHourPST() + 2));
             return getHourPST() + 2;
@@ -147,27 +183,27 @@ public class Tracker {
 
     /**
      *
-     * @param firstCell finds the first cell with some day (note the input example, 
-     * this is should get the Excel cell B2 if you are doing everything right.
+     * @param firstCell finds the first cell with some day (note the input
+     * example, this is should get the Excel cell B2 if you are doing everything
+     * right.
      * @return date from the first cell.
      */
-    public static int getCell(Date firstCell) {
-        int pst = getDayPST(getPSTTime());
-        int cell = getDay(firstCell);
-        boolean isFirst = (pst - cell) < 7;
+    public static int getCell(Calendar first) {
+        int diff = daysBetweenFirstPST(first);
+        boolean isFirst = (diff) < 7;
         if (isFirst) {
             System.out.println("here");
-            return (pst - cell) * 2 + 1;
+            return (diff) * 2 + 1;
         } else {
-            System.out.println("vaca: " + ((pst - 7) - cell));
-            System.out.println("boi: " + ((pst - 7) - cell) * 2 + 1);
-            return ((pst - 7) - cell) * 2 + 1;
+            System.out.println("vaca: " + (diff - 7));
+            System.out.println("boi: " + ((diff-7) * 2 + 1));
+            return ((diff-7) * 2 + 1);
         }
     }
 
     /**
-     * Uses everything else to do the Magic 
-     * i.e the main code for tracking and writing to the file.
+     * Uses everything else to do the Magic i.e the main code for tracking and
+     * writing to the file.
      */
     public void trackSLA() {
         try {
@@ -180,8 +216,11 @@ public class Tracker {
             Row row = sheet.getRow(rowIndex);
             Cell cell = row.getCell(cellIndex);
             Date firstCellContents = cell.getDateCellValue();
-            rowIndex = getRow(firstCellContents);
-            cellIndex = getCell(firstCellContents);
+            Calendar firstDayCalendar = Calendar.getInstance();
+            firstDayCalendar.setTime(firstCellContents);
+            rowIndex = getRow(firstDayCalendar);
+            cellIndex = getCell(firstDayCalendar);
+            System.out.println("getRow --->" + rowIndex);
             System.out.println("getCell ==" + cellIndex);
             //get the cell where it must write
             row = sheet.getRow(rowIndex);
@@ -204,11 +243,14 @@ public class Tracker {
         }
 
     }
+
     /**
      * get the SLA waiting time based on the value shown on the queue**
-     * IMPORTANT! If over an 1hour Helpshift will be updating it on a hourly basis so: 
-     * it is not possible to get something like 1h01min. 
-     * @return the time in a readable form or no issue if there is no waiting issue there.
+     * IMPORTANT! If over an 1hour Helpshift will be updating it on a hourly
+     * basis so: it is not possible to get something like 1h01min.
+     *
+     * @return the time in a readable form or no issue if there is no waiting
+     * issue there.
      */
     private static String getSLATime() {
         String json = main.GetJSON.getRawSLA(curl);

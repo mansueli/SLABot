@@ -106,8 +106,12 @@ public class SLAController implements Initializable {
     private void openFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         //Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XLS files (*.xls)", "*.xls");
-        fileChooser.getExtensionFilters().add(extFilter);
+        FileChooser.ExtensionFilter excelFilter = new FileChooser.ExtensionFilter("Excel files (*.xls, *.xlsx)", "*.xls","*.xlsx");
+//        FileChooser.ExtensionFilter xlsFilter = new FileChooser.ExtensionFilter("Excel 2003 files (*.xls)", "*.xls");
+//        FileChooser.ExtensionFilter xlsxFilter = new FileChooser.ExtensionFilter("Excel files (*.xlsx)", "*.xlsx");
+        fileChooser.getExtensionFilters().add(excelFilter);
+//        fileChooser.getExtensionFilters().add(xlsxFilter);
+        
         //Show save file dialog
         tracker.setWorkbook(fileChooser.showOpenDialog(importButton.getScene().getWindow()));
         hasSLAFile = true;

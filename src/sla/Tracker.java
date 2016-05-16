@@ -107,8 +107,8 @@ public class Tracker {
      * @return the difference between them from
      */
     public static int daysBetweenFirstPST(Calendar day1) {
-        Calendar dayTwo = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"));
-        Calendar dayOne = (Calendar) day1.clone();
+        Calendar dayOne = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"));
+        Calendar dayTwo = (Calendar) day1.clone();
 //                dayTwo = (Calendar) day2.clone();
 
         if (dayOne.get(Calendar.YEAR) == dayTwo.get(Calendar.YEAR)) {
@@ -166,9 +166,9 @@ public class Tracker {
      */
     public static int getRow(Calendar first) {
         int diff = daysBetweenFirstPST(first);
-        int pst = getDayPST(getPSTTime());
         int cell = first.get(Calendar.DAY_OF_MONTH);
         System.out.println("row=diff>>"+diff);
+        System.out.println("cell = "+cell);
         boolean isFirst = (diff) < 7;
         System.out.println("diff=" + diff);
         if (isFirst) {

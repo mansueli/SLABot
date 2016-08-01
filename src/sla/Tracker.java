@@ -294,7 +294,8 @@ public class Tracker {
      * @return string with file contents
      * @throws IOException
      */
-    public static void CreateTrackerFile(String folderPath) throws IOException, InvalidFormatException {
+    public static File CreateTrackerFile(String folderPath) throws IOException, InvalidFormatException {
+        File nextTracker = null;
         try {
             final File template = new File("res/template.xlsx");
             Tracker newTracker = new Tracker();
@@ -316,7 +317,7 @@ public class Tracker {
             cal.add(Calendar.DATE, 13);
             dateFormat = new SimpleDateFormat("MM-dd");
             name = name + " to " + dateFormat.format(cal.getTime());
-            File nextTracker = new File(folderPath + File.separator + name + ".xlsx");
+            nextTracker = new File(folderPath + File.separator + name + ".xlsx");
             System.out.println(nextTracker.getAbsolutePath());
             try ( //write it on the file
                     FileOutputStream fileOut = new FileOutputStream(nextTracker)) {
@@ -339,7 +340,7 @@ public class Tracker {
                 cal.add(Calendar.DATE, 13);
                 dateFormat = new SimpleDateFormat("MM-dd");
                 name = name + " to " + dateFormat.format(cal.getTime());
-                File nextTracker = new File(folderPath + File.separator + name + ".xlsx");
+                nextTracker = new File(folderPath + File.separator + name + ".xlsx");
                 System.out.println(nextTracker.getAbsolutePath());
                 try ( //write it on the file
                         FileOutputStream fileOut = new FileOutputStream(nextTracker)) {
@@ -349,5 +350,6 @@ public class Tracker {
                   System.out.println("Could not use the resource or the template file;");
             }
         }
+        return nextTracker;
     }
 }

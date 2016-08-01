@@ -132,7 +132,10 @@ public class SLAController implements Initializable {
                 if (keepTrackingBox.isSelected())
                     try {
                         if(Tracker.needsNewTracker()){
-                            Tracker.CreateTrackerFile(tracker.getWorkbook().getParentFile().getAbsolutePath());
+                            File newTracker = Tracker.CreateTrackerFile(tracker.getWorkbook().getParentFile().getAbsolutePath());
+                            if(newTracker != null){
+                            tracker.setWorkbook(newTracker);
+                            }
                         }
                 } catch (Exception ex) {
                     Logger.getLogger(SLAController.class.getName()).log(Level.SEVERE, null, ex);

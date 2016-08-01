@@ -22,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
@@ -46,6 +47,8 @@ public class SLAController implements Initializable {
     private static Tracker tracker;
     private static String curl;
     private static String botName;
+    @FXML
+    private CheckBox keepTrackingBox;
     @FXML
     private Button importButton;
     @FXML
@@ -126,10 +129,19 @@ public class SLAController implements Initializable {
         if (hasCURL && hasSLAFile) {
             isTracking = !isTracking;
             if (isTracking) {
+                if (keepTrackingBox.isSelected())
+                    try {
+                        if(Tracker.needsNewTracker()){
+                            Tracker.CreateTrackerFile(tracker.getWorkbook().getParentFile().getAbsolutePath());
+                        }
+                } catch (Exception ex) {
+                    Logger.getLogger(SLAController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                
                 trackButton.setText("Stop Tracking");
                 trackButton.setDefaultButton(false);
                 trackButton.setCancelButton(true);
-
                 Calendar cal = Calendar.getInstance();
                 long firstRun = 60 - cal.get(Calendar.MINUTE);
                 hourJob = new OneHourJob();

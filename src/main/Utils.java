@@ -6,21 +6,37 @@
 package main;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import static java.lang.Thread.sleep;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import sla.Tracker;
 
 /**
  *
@@ -34,8 +50,9 @@ public class Utils {
 
     /**
      * Read a file from the system
+     *
      * @param path the Path for the file
-     * @param encoding charset i.e UTF-8 or Klingon 
+     * @param encoding charset i.e UTF-8 or Klingon
      * @return string with file contents
      * @throws IOException
      */
@@ -49,8 +66,9 @@ public class Utils {
 
     /**
      * Save a file into the system
-     * @param content the content to be written 
-     * @param file the file, eh?! 
+     *
+     * @param content the content to be written
+     * @param file the file, eh?!
      */
     public static void SaveFile(String content, File file) {
         try {
@@ -67,9 +85,10 @@ public class Utils {
 
     /**
      * Find all occurrences of a list of elements in a JSON String
+     *
      * @param items
      * @param json
-     * @return string with everything found (if something was found) 
+     * @return string with everything found (if something was found)
      * @throws IOException
      * @throws InterruptedException
      */
@@ -95,6 +114,7 @@ public class Utils {
 
     /**
      * Finds the value for a determined JSON key
+     *
      * @param key where the value is stored
      * @param jsonText the place where you have to find that thing
      * @return
@@ -109,11 +129,11 @@ public class Utils {
                 parser.parse(jsonText, finder, true);
                 if (finder.isFound()) {
                     finder.setFound(false);
-                    if (key.equalsIgnoreCase("items")){
+                    if (key.equalsIgnoreCase("items")) {
                         finder.startArray();
                         System.out.println("finder.getValue() -->" + finder.getValue() + finder.endArray());
                     }
-                    
+
 //        System.out.println(key + ",");
                     //System.out.println(key + "===>>" + finder.getValue().toString());//.replaceAll("[^A-Za-z0-9,_]", "") + ",");
                     break;
@@ -127,4 +147,4 @@ public class Utils {
         return finder.getValue().toString().replaceAll("[^A-Za-z0-9,_.]", "").replaceAll(",", ";");
     }
 
-    }
+}

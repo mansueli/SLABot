@@ -8,7 +8,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slabot.SLAController">
+<AnchorPane id="AnchorPane" prefHeight="211.0" prefWidth="320" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slabot.SLAController">
     <children>
         <Button fx:id="trackButton" defaultButton="true" layoutX="217.0" layoutY="161.0" onAction="#trackButton" text="Start Tracking" />
         <Label fx:id="label" layoutX="14.0" layoutY="72.0" minHeight="16" minWidth="69" text="Details:">
@@ -25,5 +25,6 @@
       <Label fx:id="detailLabel" layoutX="14.0" layoutY="100.0" />
       <TextField fx:id="nameField" layoutX="90.0" layoutY="161.0" prefHeight="25.0" prefWidth="121.0" text="SLAbot" />
       <Label layoutX="10.0" layoutY="165.0" text="Track Name" />
+      <CheckBox fx:id="keepTrackingBox" layoutX="14.0" layoutY="186.0" mnemonicParsing="false" selected="true" text="Keep tracking" />
     </children>
 </AnchorPane>

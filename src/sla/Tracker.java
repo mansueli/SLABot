@@ -7,9 +7,11 @@ package sla;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -167,16 +169,16 @@ public class Tracker {
     public static int getRow(Calendar first) {
         int diff = daysBetweenFirstPST(first);
         int cell = first.get(Calendar.DAY_OF_MONTH);
-        System.out.println("row=diff>>"+diff);
-        System.out.println("cell = "+cell);
+        System.out.println("row=diff>>" + diff);
+        System.out.println("cell = " + cell);
         boolean isFirst = (diff) < 7;
         System.out.println("diff=" + diff);
         if (isFirst) {
-            System.out.println("Row: "  + (getHourPST() + 2));
+            System.out.println("Row: " + (getHourPST() + 2));
             return getHourPST() + 2;
 
         } else {
-            System.out.println("Row: "  + (getHourPST() + 28));
+            System.out.println("Row: " + (getHourPST() + 28));
             return getHourPST() + 28;
         }
     }
@@ -196,8 +198,8 @@ public class Tracker {
             return (diff) * 2 + 1;
         } else {
             System.out.println("vaca: " + (diff - 7));
-            System.out.println("boi: " + ((diff-7) * 2 + 1));
-            return ((diff-7) * 2 + 1);
+            System.out.println("boi: " + ((diff - 7) * 2 + 1));
+            return ((diff - 7) * 2 + 1);
         }
     }
 
@@ -264,4 +266,62 @@ public class Tracker {
         System.out.println("\nempty>>" + empty + "\nfound::" + result);
         return result;
     }
+
+    public static boolean needsNewTracker() throws Exception {
+        final String FILE = workbook.getAbsolutePath();
+        System.out.println("open " + workbook.getAbsolutePath());
+        InputStream inp = new FileInputStream(FILE);
+        Workbook wb = WorkbookFactory.create(inp);
+        Sheet sheet = wb.getSheetAt(0);
+        Row row = sheet.getRow(1);
+        Cell cell = row.getCell(1);
+        Date firstCellContents = cell.getDateCellValue();
+        Calendar firstDayCalendar = Calendar.getInstance();
+        firstDayCalendar.setTime(firstCellContents);
+        int diff = daysBetweenFirstPST(firstDayCalendar);
+        if(diff < 14)
+            return false;
+        else return true;
+    }
+
+    
+    
+        /**
+     * Read a file from the system
+     *
+     * @param folderPath the Path where to store the file
+     * @param encoding charset i.e UTF-8 or Klingon
+     * @return string with file contents
+     * @throws IOException
+     */
+    public static void CreateTrackerFile(String folderPath) throws IOException, InvalidFormatException {
+        final File template = new File("res/template.xlsx");
+
+        Tracker newTracker = new Tracker();
+        newTracker.setWorkbook(template);
+        Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"));
+        cal.setTime(Tracker.getPSTTime());
+        cal.add(Calendar.DATE, 1);
+        System.out.println("open " + template.getAbsolutePath());
+        InputStream inp = new FileInputStream(template);
+        int rowIndex = 1, cellIndex = 1;
+        Workbook wb = WorkbookFactory.create(inp);
+        Sheet sheet = wb.getSheetAt(0);
+        Row row = sheet.getRow(1);
+        Cell cell = row.getCell(1);
+        Date firstCellContents = cell.getDateCellValue();
+        cell.setCellValue(cal.getTime());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String name = "SLA Tracker " + dateFormat.format(cal.getTime());
+        cal.add(Calendar.DATE, 13);
+        dateFormat = new SimpleDateFormat("MM-dd");
+        name = name + " to "+ dateFormat.format(cal.getTime());
+        File nextTracker = new File(folderPath + File.separator + name + ".xlsx");
+        System.out.println(nextTracker.getAbsolutePath());
+        try ( //write it on the file
+            FileOutputStream fileOut = new FileOutputStream(nextTracker)) {
+            wb.write(fileOut);
+        }
+    }
+    
 }

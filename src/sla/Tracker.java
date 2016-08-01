@@ -279,14 +279,14 @@ public class Tracker {
         Calendar firstDayCalendar = Calendar.getInstance();
         firstDayCalendar.setTime(firstCellContents);
         int diff = daysBetweenFirstPST(firstDayCalendar);
-        if(diff < 14)
+        if (diff < 14) {
             return false;
-        else return true;
+        } else {
+            return true;
+        }
     }
 
-    
-    
-        /**
+    /**
      * Read a file from the system
      *
      * @param folderPath the Path where to store the file
@@ -295,33 +295,59 @@ public class Tracker {
      * @throws IOException
      */
     public static void CreateTrackerFile(String folderPath) throws IOException, InvalidFormatException {
-        final File template = new File("res/template.xlsx");
-
-        Tracker newTracker = new Tracker();
-        newTracker.setWorkbook(template);
-        Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"));
-        cal.setTime(Tracker.getPSTTime());
-        cal.add(Calendar.DATE, 1);
-        System.out.println("open " + template.getAbsolutePath());
-        InputStream inp = new FileInputStream(template);
-        int rowIndex = 1, cellIndex = 1;
-        Workbook wb = WorkbookFactory.create(inp);
-        Sheet sheet = wb.getSheetAt(0);
-        Row row = sheet.getRow(1);
-        Cell cell = row.getCell(1);
-        Date firstCellContents = cell.getDateCellValue();
-        cell.setCellValue(cal.getTime());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String name = "SLA Tracker " + dateFormat.format(cal.getTime());
-        cal.add(Calendar.DATE, 13);
-        dateFormat = new SimpleDateFormat("MM-dd");
-        name = name + " to "+ dateFormat.format(cal.getTime());
-        File nextTracker = new File(folderPath + File.separator + name + ".xlsx");
-        System.out.println(nextTracker.getAbsolutePath());
-        try ( //write it on the file
-            FileOutputStream fileOut = new FileOutputStream(nextTracker)) {
-            wb.write(fileOut);
+        try {
+            final File template = new File("res/template.xlsx");
+            Tracker newTracker = new Tracker();
+            newTracker.setWorkbook(template);
+            Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"));
+            cal.setTime(Tracker.getPSTTime());
+            cal.add(Calendar.DATE, 1);
+            System.out.println("open " + template.getAbsolutePath());
+            InputStream inp = new FileInputStream(template);
+            int rowIndex = 1, cellIndex = 1;
+            Workbook wb = WorkbookFactory.create(inp);
+            Sheet sheet = wb.getSheetAt(0);
+            Row row = sheet.getRow(1);
+            Cell cell = row.getCell(1);
+            Date firstCellContents = cell.getDateCellValue();
+            cell.setCellValue(cal.getTime());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String name = "SLA Tracker " + dateFormat.format(cal.getTime());
+            cal.add(Calendar.DATE, 13);
+            dateFormat = new SimpleDateFormat("MM-dd");
+            name = name + " to " + dateFormat.format(cal.getTime());
+            File nextTracker = new File(folderPath + File.separator + name + ".xlsx");
+            System.out.println(nextTracker.getAbsolutePath());
+            try ( //write it on the file
+                    FileOutputStream fileOut = new FileOutputStream(nextTracker)) {
+                wb.write(fileOut);
+            }
+        } catch (Exception e) {
+            try {
+                Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"));
+                cal.setTime(Tracker.getPSTTime());
+                cal.add(Calendar.DATE, 1);
+                int rowIndex = 1, cellIndex = 1;
+                Workbook wb = WorkbookFactory.create(Tracker.class.getResourceAsStream("res/template.xlsx"));
+                Sheet sheet = wb.getSheetAt(0);
+                Row row = sheet.getRow(1);
+                Cell cell = row.getCell(1);
+                Date firstCellContents = cell.getDateCellValue();
+                cell.setCellValue(cal.getTime());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String name = "SLA Tracker " + dateFormat.format(cal.getTime());
+                cal.add(Calendar.DATE, 13);
+                dateFormat = new SimpleDateFormat("MM-dd");
+                name = name + " to " + dateFormat.format(cal.getTime());
+                File nextTracker = new File(folderPath + File.separator + name + ".xlsx");
+                System.out.println(nextTracker.getAbsolutePath());
+                try ( //write it on the file
+                        FileOutputStream fileOut = new FileOutputStream(nextTracker)) {
+                    wb.write(fileOut);
+                }
+            } catch (Exception ep) {
+                  System.out.println("Could not use the resource or the template file;");
+            }
         }
     }
-    
 }

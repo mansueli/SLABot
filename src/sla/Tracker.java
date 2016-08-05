@@ -302,7 +302,7 @@ public class Tracker {
             newTracker.setWorkbook(template);
             Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"));
             cal.setTime(Tracker.getPSTTime());
-            cal.add(Calendar.DATE, 1);
+            //cal.add(Calendar.DATE, 1);
             System.out.println("open " + template.getAbsolutePath());
             InputStream inp = new FileInputStream(template);
             int rowIndex = 1, cellIndex = 1;
@@ -312,6 +312,8 @@ public class Tracker {
             Cell cell = row.getCell(1);
             Date firstCellContents = cell.getDateCellValue();
             cell.setCellValue(cal.getTime());
+            wb.getCreationHelper().createFormulaEvaluator().evaluateAll();
+            wb.setForceFormulaRecalculation(true);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String name = "SLA Tracker " + dateFormat.format(cal.getTime());
             cal.add(Calendar.DATE, 13);

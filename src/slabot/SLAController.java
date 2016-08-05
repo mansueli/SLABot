@@ -58,6 +58,7 @@ public class SLAController implements Initializable {
     @FXML
     private TextField nameField;
     private static final StringProperty labelProperty = new SimpleStringProperty();
+    private static boolean continueTracking;
 /***
  * Class to do it's job hour after hour without getting tired of its slave work
  */
@@ -67,7 +68,18 @@ public class SLAController implements Initializable {
         public void run() {
             Platform.runLater(new Runnable() {
                 public void run() {
-                    
+                    if (continueTracking)
+                    try {
+                        if(Tracker.needsNewTracker()){
+                            File newTracker = Tracker.CreateTrackerFile(tracker.getWorkbook().getParentFile().getAbsolutePath());
+                            if(newTracker != null){
+                            tracker.setWorkbook(newTracker);
+                            System.out.println("Tracker updated to: " + tracker.getWorkbook().getAbsolutePath());
+                            }
+                        }
+                } catch (Exception ex) {
+                    Logger.getLogger(SLAController.class.getName()).log(Level.SEVERE, null, ex);
+                }
                     tracker.setBotName(botName);
                     System.out.println("Set botName = " + botName);
                     System.out.println("Tracked " + getHourPST() + ":00\n");
@@ -129,19 +141,6 @@ public class SLAController implements Initializable {
         if (hasCURL && hasSLAFile) {
             isTracking = !isTracking;
             if (isTracking) {
-                if (keepTrackingBox.isSelected())
-                    try {
-                        if(Tracker.needsNewTracker()){
-                            File newTracker = Tracker.CreateTrackerFile(tracker.getWorkbook().getParentFile().getAbsolutePath());
-                            if(newTracker != null){
-                            tracker.setWorkbook(newTracker);
-                            }
-                        }
-                } catch (Exception ex) {
-                    Logger.getLogger(SLAController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
-                
                 trackButton.setText("Stop Tracking");
                 trackButton.setDefaultButton(false);
                 trackButton.setCancelButton(true);
@@ -152,6 +151,7 @@ public class SLAController implements Initializable {
                 System.out.println("Will start tracking in " + firstRun + " minutes.");
                 labelProperty.set("Will start tracking in " + firstRun + " minutes.");
                 botName = nameField.getText();
+                continueTracking = keepTrackingBox.isSelected();
                 timer.scheduleAtFixedRate(hourJob, firstRun * MIN, HOUR); //  0,2 *MIN);//
             } else {
                 trackButton.setText("Start Tracking");

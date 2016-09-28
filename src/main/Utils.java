@@ -131,20 +131,17 @@ public class Utils {
                     finder.setFound(false);
                     if (key.equalsIgnoreCase("items")) {
                         finder.startArray();
-                        System.out.println("finder.getValue() -->" + finder.getValue() + finder.endArray());
                     }
 
-//        System.out.println(key + ",");
-                    //System.out.println(key + "===>>" + finder.getValue().toString());//.replaceAll("[^A-Za-z0-9,_]", "") + ",");
                     break;
                 } else {
-                    //System.out.println("vaca,"); 
                 }
             }
         } catch (Exception pe) {
             pe.printStackTrace();
+            return "false";
         }
-        return finder.getValue().toString().replaceAll("[^A-Za-z0-9,_.]", "").replaceAll(",", ";");
+        return finder.getValue()==null? "false" : finder.getValue().toString().replaceAll("[^A-Za-z0-9,_.]", "").replaceAll(",", ";");
     }
 
 }

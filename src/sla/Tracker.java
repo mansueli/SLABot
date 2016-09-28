@@ -97,7 +97,6 @@ public class Tracker {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         Integer day = cal.get(Calendar.DATE);
-        //System.out.println("date>>" + day);
         return day;
     }
 
@@ -145,7 +144,6 @@ public class Tracker {
         Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"));
         cal.setTime(date);
         Integer day = cal.get(Calendar.DATE);
-        //System.out.println("date>>" + day);
         return day;
     }
 
@@ -169,16 +167,11 @@ public class Tracker {
     public static int getRow(Calendar first) {
         int diff = daysBetweenFirstPST(first);
         int cell = first.get(Calendar.DAY_OF_MONTH);
-        System.out.println("row=diff>>" + diff);
-        System.out.println("cell = " + cell);
         boolean isFirst = (diff) < 7;
-        System.out.println("diff=" + diff);
         if (isFirst) {
-            System.out.println("Row: " + (getHourPST() + 2));
             return getHourPST() + 2;
 
         } else {
-            System.out.println("Row: " + (getHourPST() + 28));
             return getHourPST() + 28;
         }
     }
@@ -194,11 +187,8 @@ public class Tracker {
         int diff = daysBetweenFirstPST(first);
         boolean isFirst = (diff) < 7;
         if (isFirst) {
-            System.out.println("here");
             return (diff) * 2 + 1;
         } else {
-            System.out.println("vaca: " + (diff - 7));
-            System.out.println("boi: " + ((diff - 7) * 2 + 1));
             return ((diff - 7) * 2 + 1);
         }
     }
@@ -222,8 +212,6 @@ public class Tracker {
             firstDayCalendar.setTime(firstCellContents);
             rowIndex = getRow(firstDayCalendar);
             cellIndex = getCell(firstDayCalendar);
-            System.out.println("getRow --->" + rowIndex);
-            System.out.println("getCell ==" + cellIndex);
             //get the cell where it must write
             row = sheet.getRow(rowIndex);
             cell = row.getCell(cellIndex);
@@ -263,13 +251,11 @@ public class Tracker {
         } else {
             return "no issue";
         }
-        System.out.println("\nempty>>" + empty + "\nfound::" + result);
         return result;
     }
 
     public static boolean needsNewTracker() throws Exception {
         final String FILE = workbook.getAbsolutePath();
-        System.out.println("open " + workbook.getAbsolutePath());
         InputStream inp = new FileInputStream(FILE);
         Workbook wb = WorkbookFactory.create(inp);
         Sheet sheet = wb.getSheetAt(0);
@@ -320,7 +306,6 @@ public class Tracker {
             dateFormat = new SimpleDateFormat("MM-dd");
             name = name + " to " + dateFormat.format(cal.getTime());
             nextTracker = new File(folderPath + File.separator + name + ".xlsx");
-            System.out.println(nextTracker.getAbsolutePath());
             try ( //write it on the file
                     FileOutputStream fileOut = new FileOutputStream(nextTracker)) {
                 wb.write(fileOut);
@@ -343,13 +328,12 @@ public class Tracker {
                 dateFormat = new SimpleDateFormat("MM-dd");
                 name = name + " to " + dateFormat.format(cal.getTime());
                 nextTracker = new File(folderPath + File.separator + name + ".xlsx");
-                System.out.println(nextTracker.getAbsolutePath());
                 try ( //write it on the file
                         FileOutputStream fileOut = new FileOutputStream(nextTracker)) {
                     wb.write(fileOut);
                 }
             } catch (Exception ep) {
-                  System.out.println("Could not use the resource or the template file;");
+                e.printStackTrace();
             }
         }
         return nextTracker;

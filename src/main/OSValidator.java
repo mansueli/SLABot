@@ -25,19 +25,14 @@ public class OSValidator {
      */
     public static int getOSID() {
 
-        System.out.println(OS);
-
         if (isWindows()) {
-            System.out.println("This is Windows");
             return 0;
         } else if (isMac()) {
-            System.out.println("This is Mac");
             return 1;
         } else if (isUnix()) {
-            System.out.println("This is Unix or Linux");
             return 1;
         } else {
-            System.out.println("Your OS is not supported!!");
+            //not supported
             return 2;
         }
     }

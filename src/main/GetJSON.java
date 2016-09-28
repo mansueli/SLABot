@@ -42,9 +42,6 @@ public class GetJSON {
                 cmdString = curl.substring(1);
             else
                 cmdString = curl;
-           
-            System.out.println(cmdString);
-
             Process pr; 
             if(OSValidator.getOSID()==0){
                 pr = rt.exec(cmdString);
@@ -65,10 +62,8 @@ public class GetJSON {
                 builder.append(buffer, 0, read);
             }
             pr.waitFor();
-            System.out.println("Exited with error code " + pr.exitValue());
             return builder.toString();
         } catch (Exception e) {
-            System.out.println(e.toString());
             e.printStackTrace();
         }
         return null;

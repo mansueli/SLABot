@@ -74,7 +74,6 @@ public class SLAController implements Initializable {
                             File newTracker = Tracker.CreateTrackerFile(tracker.getWorkbook().getParentFile().getAbsolutePath());
                             if(newTracker != null){
                             tracker.setWorkbook(newTracker);
-                            System.out.println("Tracker updated to: " + tracker.getWorkbook().getAbsolutePath());
                             }
                         }
                 } catch (Exception ex) {
@@ -102,7 +101,6 @@ public class SLAController implements Initializable {
         File file = directoryChooser.showOpenDialog(importButton.getScene().getWindow());
         try {
             curl = main.Utils.readFile(file.getAbsolutePath(), StandardCharsets.UTF_8);
-            System.out.println(getRawSLA(curl));
             hasCURL = true;
             tracker.setCurl(curl);
         } catch (Exception ex) {
@@ -152,7 +150,7 @@ public class SLAController implements Initializable {
                 labelProperty.set("Will start tracking in " + firstRun + " minutes.");
                 botName = nameField.getText();
                 continueTracking = keepTrackingBox.isSelected();
-                timer.scheduleAtFixedRate(hourJob, firstRun * MIN, HOUR); //  0,2 *MIN);//
+                timer.scheduleAtFixedRate(hourJob,   firstRun * MIN, HOUR); //0,2 *MIN);//
             } else {
                 trackButton.setText("Start Tracking");
                 trackButton.setCancelButton(false);

@@ -5,6 +5,8 @@ This is a small and immature project that tracks the oldest new issue in a **Sha
 
 If you don't know what a Shared HelpShift queue is, this is not for you.
 
+Please check the [WIKI](https://github.com/mansueli/SLABot/wiki) the information there is more detailed and better explained. ;-) 
+
 
 USAGE
 -----
@@ -18,7 +20,7 @@ And the [input file](https://github.com/mansueli/SLABot/tree/master/input%20exam
 LICENSE
 -----
 
-This project is itself licensed with the very fun and Commercial friendly licence Apache 2.0 check the [licence file](https://github.com/mansueli/SLABot/blob/master/LICENSE) for more info. If you, for any reason, need this to be licensed under something else please contact me. 
+This project is itself licensed with the very fun and Commercial friendly license Apache 2.0 check the [license file](https://github.com/mansueli/SLABot/blob/master/LICENSE) for more info. If you, for any reason, need this to be licensed under something else please contact me. 
 
 **NOTE** 
 This project relies on cURL binaries through Command line communication which is licensed under an [MIT/X derivate licence](https://curl.haxx.se/docs/copyright.html). 
